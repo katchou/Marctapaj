@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if category_list %}
+	<ul>
+	{% for category in category_list %}
+		<li>{{ category.name }}</a>
+			<ul>
+			{% for bookmark in category.bookmark_set.all %}
+				<li><p>{{ bookmark.name }}</p>
+					<p><a href="{% url 'marctapaj:go_to_bookmark' bookmark.id %}" target="_blank">Go!</a></p>
+					<p>Visited {{ bookmark.access_count }} time{{ bookmark.access_count|pluralize }}</p>
+					<p>Last visit {{ bookmark.last_access }}</p>
+					<ul>
+					{% for note in bookmark.note_set.all %}
+						<li>
+							<p>{{ note.content }}</p>
+							<p><a href="{% url 'marctapaj:edit_note' note.id %}">Edit</a></p>
+							<p><a href="{% url 'marctapaj:del_note' note.id %}">Delete</a></p>
+						</li>
+					{% endfor %}
+					</ul>
+					<p><a href="{% url 'marctapaj:add_note' bookmark.id %}">Add note...</a></p>
+				</li>
+			{% endfor %}
+			</ul>
+			<p><a href="{% url 'marctapaj:add_bm' %}?cat={{ category.id }}">Add...</a></p>
+			<p><a href="{% url 'marctapaj:edit_cat' category.id%}">Edit {{ category.name }}...</a></p>
+			<p><a href="{% url 'marctapaj:del_cat' category.id%}">Delete {{ category.name }}...</a></p>
+		</li>
+	{% endfor %}
+	</ul>
+	<p><a href="{% url 'marctapaj:add_cat' %}">Add a category?</a></p>
+{% else %}
+	<p>No categories are available. <a href="{% url 'marctapaj:add_cat' %}">Add one?</a></p>
+{% endif %}
+{% endblock %}
